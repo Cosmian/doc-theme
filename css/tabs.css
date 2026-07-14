@@ -1,0 +1,52 @@
+/* Self-contained tabbed content (replaces the mdbook-tabs plugin). */
+
+.tabs {
+    margin: 1rem 0;
+    border: 1px solid var(--quote-border, #ddd);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.tabs > .tab-headers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    background: var(--sidebar-bg, #f5f5f5);
+    border-bottom: 1px solid var(--quote-border, #ddd);
+}
+
+.tabs > .tab-headers > .tab-link {
+    appearance: none;
+    border: none;
+    background: transparent;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.85em;
+    color: inherit;
+    border-bottom: 2px solid transparent;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.tabs > .tab-headers > .tab-link:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.tabs > .tab-headers > .tab-link.active {
+    border-bottom-color: var(--cosmian-accent, #e94e24);
+    font-weight: 600;
+    color: var(--cosmian-accent, #e94e24);
+}
+
+.tabs > .tab-content {
+    display: none;
+    padding: 0.4rem 1rem;
+}
+
+.tabs > .tab-content.active {
+    display: block;
+}
+
+.tabs > .tab-content > :first-child {
+    margin-top: 0.4rem;
+}
