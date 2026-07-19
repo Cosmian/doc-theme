@@ -402,7 +402,7 @@ def build_standalone(doc_dir: Path) -> None:
 # Combined mode  (python3 generate-summary.py --combined)
 # ═══════════════════════════════════════════════════════════════
 
-ROOT = Path(__file__).resolve().parent.parent  # public_documentation/
+ROOT = Path(__file__).resolve().parent.parent.parent  # public_documentation/
 
 # Sections in display order.
 # nav_source_rel: path to the directory containing nav.yml or mkdocs.yml,

@@ -1,45 +1,45 @@
-// Self-contained tabbed content behaviour (replaces the mdbook-tabs plugin).
-(function () {
-    function activate(container, index) {
-        var links = [];
-        var panels = [];
-        for (var i = 0; i < container.children.length; i++) {
-            var child = container.children[i];
-            if (child.classList.contains("tab-headers")) {
-                for (var j = 0; j < child.children.length; j++) {
-                    if (child.children[j].classList.contains("tab-link")) {
-                        links.push(child.children[j]);
-                    }
-                }
-            } else if (child.classList.contains("tab-content")) {
-                panels.push(child);
+// Tabbed content behaviour — compatible with the mdbook-tabs preprocessor.
+const changeTab = (container, name) => {
+    for (const child of container.children) {
+        if (!(child instanceof HTMLElement)) continue;
+        if (child.classList.contains('mdbook-tabs')) {
+            for (const tab of child.children) {
+                if (!(tab instanceof HTMLElement)) continue;
+                tab.classList.toggle('active', tab.dataset.tabname === name);
             }
+        } else if (child.classList.contains('mdbook-tab-content')) {
+            child.classList.toggle('hidden', child.dataset.tabname !== name);
         }
-        links.forEach(function (l, i) {
-            l.classList.toggle("active", i === index);
-        });
-        panels.forEach(function (p, i) {
-            p.classList.toggle("active", i === index);
-        });
     }
+};
 
-    function init() {
-        var containers = document.querySelectorAll(".tabs");
-        containers.forEach(function (container) {
-            var headers = container.querySelector(":scope > .tab-headers");
-            if (!headers) return;
-            var links = headers.querySelectorAll(":scope > .tab-link");
-            links.forEach(function (link, index) {
-                link.addEventListener("click", function () {
-                    activate(container, index);
-                });
-            });
+document.addEventListener('DOMContentLoaded', () => {
+    for (const tab of document.querySelectorAll('.mdbook-tab')) {
+        tab.addEventListener('click', () => {
+            if (!(tab instanceof HTMLElement)) return;
+            const nav = tab.parentElement;
+            if (!nav || !nav.parentElement) return;
+            const container = nav.parentElement;
+            const name = tab.dataset.tabname;
+            const global = container.dataset.tabglobal;
+            changeTab(container, name);
+            if (global) {
+                localStorage.setItem(`mdbook-tabs-${global}`, name);
+                for (const gc of document.querySelectorAll(
+                    `.mdbook-tabs-container[data-tabglobal="${global}"]`
+                )) {
+                    changeTab(gc, name);
+                }
+            }
         });
     }
-
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", init);
-    } else {
-        init();
+    for (const container of document.querySelectorAll(
+        '.mdbook-tabs-container[data-tabglobal]'
+    )) {
+        const global = container.dataset.tabglobal;
+        const name = localStorage.getItem(`mdbook-tabs-${global}`);
+        if (name && document.querySelector(`.mdbook-tab[data-tabname="${name}"]`)) {
+            changeTab(container, name);
+        }
     }
-})();
+});

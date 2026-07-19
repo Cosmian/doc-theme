@@ -1,13 +1,13 @@
-/* Self-contained tabbed content (replaces the mdbook-tabs plugin). */
+/* Tabbed content — compatible with the mdbook-tabs preprocessor. */
 
-.tabs {
+.mdbook-tabs-container {
     margin: 1rem 0;
     border: 1px solid var(--quote-border, #ddd);
     border-radius: 6px;
     overflow: hidden;
 }
 
-.tabs > .tab-headers {
+.mdbook-tabs {
     display: flex;
     flex-wrap: wrap;
     gap: 0;
@@ -15,7 +15,7 @@
     border-bottom: 1px solid var(--quote-border, #ddd);
 }
 
-.tabs > .tab-headers > .tab-link {
+.mdbook-tab {
     appearance: none;
     border: none;
     background: transparent;
@@ -28,25 +28,28 @@
     transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.tabs > .tab-headers > .tab-link:hover {
+.mdbook-tab:hover {
     background: rgba(0, 0, 0, 0.05);
 }
 
-.tabs > .tab-headers > .tab-link.active {
+.mdbook-tab.active {
     border-bottom-color: var(--cosmian-accent, #e94e24);
     font-weight: 600;
     color: var(--cosmian-accent, #e94e24);
 }
 
-.tabs > .tab-content {
-    display: none;
+.mdbook-tab-content {
     padding: 0.4rem 1rem;
 }
 
-.tabs > .tab-content.active {
-    display: block;
+.mdbook-tab-content.hidden {
+    display: none;
 }
 
-.tabs > .tab-content > :first-child {
+.mdbook-tab-content > :first-child {
     margin-top: 0.4rem;
+}
+
+.mdbook-tab-content table {
+    margin: unset;
 }
