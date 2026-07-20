@@ -228,15 +228,57 @@ def convert_markdown(text: str) -> str:
 # Nav loading
 # ═══════════════════════════════════════════════════════════════
 
+def _parse_nav_yml(text: str) -> list:
+    """Stdlib-only parser for the nav.yml subset used by this project.
+
+    Handles:
+      nav:
+        - Label: file.md
+        - Section:
+          - Sub: file.md
+
+    No PyYAML required.
+    """
+    result: list = []
+    stack: list = [(-1, result)]
+
+    for raw in text.splitlines():
+        line = raw.rstrip()
+        stripped = line.lstrip()
+        if not stripped or stripped.startswith('#') or stripped == '---':
+            continue
+        indent = len(line) - len(stripped)
+        if stripped == 'nav:':
+            continue
+        if not stripped.startswith('- '):
+            continue
+        content = stripped[2:]
+        while len(stack) > 1 and stack[-1][0] >= indent:
+            stack.pop()
+        key, sep, val = content.partition(':')
+        if not sep:
+            continue
+        val = val.strip()
+        if val:
+            stack[-1][1].append({key.strip(): val})
+        else:
+            new_list: list = []
+            stack[-1][1].append({key.strip(): new_list})
+            stack.append((indent, new_list))
+
+    return result
+
+
 def load_nav_yml(path: Path) -> list:
-    """Load nav list from a new-format nav.yml file."""
-    import yaml
-    data = yaml.safe_load(path.read_text())
-    return data['nav']
+    """Load nav list from a new-format nav.yml file (no external deps)."""
+    return _parse_nav_yml(path.read_text())
 
 
 def load_mkdocs_nav(path: Path) -> tuple[list, str]:
-    """Load nav list and site name from an old-format mkdocs.yml file."""
+    """Load nav list and site name from an old-format mkdocs.yml file.
+
+    Requires PyYAML (installed as a mkdocs dependency).
+    """
     import yaml
 
     class _Loader(yaml.SafeLoader):
