@@ -7,6 +7,8 @@
     var DARK_THEMES  = ['coal', 'navy', 'ayu'];
     var DARK_TARGET  = 'navy';   // preferred dark theme
     var LIGHT_TARGET = 'light';  // preferred light theme
+    // Keep legacy themes in the removal list so old localStorage values are
+    // properly cleared when switching themes (coal/ayu/rust removed from UI).
     var ALL_THEMES   = ['coal', 'navy', 'ayu', 'rust', 'light'];
 
     function currentTheme() {

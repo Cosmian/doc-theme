@@ -133,6 +133,25 @@ html.ayu  .emgithub-embed {
     margin: 0.5em 0;
 }
 
+/* ── Sidebar navigation UX improvements ──────────────────────────────── */
+
+/* Full-row hover highlight — makes every chapter item feel interactive,
+   so users know the text is clickable (not just the arrow toggle). */
+.chapter li.chapter-item:hover {
+    background-color: var(--sidebar-spacer);
+    border-radius: 4px;
+}
+
+/* Expand the toggle hit-area to fill the gap between the chapter title
+   and the arrow. Clicking anywhere in that gap now also folds/unfolds
+   the section, matching the behaviour users expect from the old site. */
+.chapter li > a.toggle {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
 /* ── Version switcher ─────────────────────────────────────────────────── */
 #version-switcher-mount {
     align-items: center;
