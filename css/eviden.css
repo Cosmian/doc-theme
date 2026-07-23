@@ -142,14 +142,22 @@ html.ayu  .emgithub-embed {
     border-radius: 4px;
 }
 
-/* Expand the toggle hit-area to fill the gap between the chapter title
-   and the arrow. Clicking anywhere in that gap now also folds/unfolds
-   the section, matching the behaviour users expect from the old site. */
-.chapter li > a.toggle {
+/* Title link fills the row (minus the arrow button) so the entire text
+   area is clickable. Clicking navigates, and mdBook auto-expands the
+   active subtree when the destination page loads. min-width: 0 prevents
+   long titles from overflowing the sidebar. */
+.chapter li.chapter-item > a:not(.toggle) {
     flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    min-width: 0;
+}
+
+/* Section headers with no link are rendered as <div> by mdBook.
+   Make them fill the row and show a pointer so users know they're
+   interactive (JS in sidebar-expand.js proxies clicks to the toggle). */
+.chapter li.chapter-item > div {
+    flex: 1;
+    min-width: 0;
+    cursor: pointer;
 }
 
 /* ── Version switcher ─────────────────────────────────────────────────── */
