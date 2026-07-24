@@ -3,8 +3,8 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 (() => {
-    const darkThemes = ['ayu', 'navy', 'coal'];
-    const lightThemes = ['light', 'rust'];
+    const darkThemes = ['navy'];
+    const lightThemes = ['light'];
 
     const classList = document.getElementsByTagName('html')[0].classList;
 
@@ -22,7 +22,9 @@
     // Simplest way to make mermaid re-render the diagrams in the new theme is via refreshing the page
 
     for (const darkTheme of darkThemes) {
-        document.getElementById(darkTheme).addEventListener('click', () => {
+        const btn = document.getElementById(darkTheme);
+        if (!btn) continue;
+        btn.addEventListener('click', () => {
             if (lastThemeWasLight) {
                 window.location.reload();
             }
@@ -30,7 +32,9 @@
     }
 
     for (const lightTheme of lightThemes) {
-        document.getElementById(lightTheme).addEventListener('click', () => {
+        const btn = document.getElementById(lightTheme);
+        if (!btn) continue;
+        btn.addEventListener('click', () => {
             if (!lastThemeWasLight) {
                 window.location.reload();
             }
