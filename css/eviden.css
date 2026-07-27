@@ -182,6 +182,32 @@ html.ayu  .emgithub-embed {
     opacity: 1;
 }
 
+/* ── Top-level sidebar section headers ───────────────────────────────────── */
+/* Items at depth 0 in SUMMARY.md act as chapter group titles.
+   Render them in Montserrat uppercase to match the former MkDocs Material
+   "navigation section" style: clearly distinct from child page links. */
+
+/* Visual separator + breathing room above every top-level group except first */
+ol.chapter > li.chapter-item + li.chapter-item {
+    margin-top: 1.1rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--sidebar-spacer);
+}
+
+/* Section headers with no link (empty link in SUMMARY.md → rendered as <div>)
+   and headers that do carry a link (rendered as <a>).
+   More-specific selector (0,2,3) overrides the general rule (0,2,2) above. */
+ol.chapter > li.chapter-item > div,
+ol.chapter > li.chapter-item > a:not(.toggle) {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fg);
+    opacity: 0.9;
+}
+
 /* ── Version switcher ─────────────────────────────────────────────────── */
 #version-switcher-mount {
     display: flex;

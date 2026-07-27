@@ -159,6 +159,58 @@ def _gather_indented(lines: list[str], start: int, body_indent: int,
     return body, j
 
 
+def _make_anchor(heading_text: str) -> str:
+    """Return an mdBook-compatible anchor for a heading string."""
+    # Strip inline links [text](url) -> text
+    text = re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', heading_text)
+    # Strip bold/italic/code markers
+    text = re.sub(r'[`*_]', '', text)
+    text = html.unescape(text).lower()
+    # Replace whitespace with hyphens, drop everything else
+    text = re.sub(r'\s+', '-', text)
+    text = re.sub(r'[^a-z0-9\-]', '', text)
+    text = re.sub(r'-{2,}', '-', text)
+    return text.strip('-')
+
+
+def _generate_toc(lines: list[str], start: int = 0) -> list[str]:
+    """Generate a markdown TOC list from H2+ headings in lines[start:].
+
+    H1 headings are skipped (they are the page title).
+    Duplicated anchors get a -N suffix, matching mdBook's behaviour.
+    """
+    heading_re = re.compile(r'^(#{2,6})\s+(.*?)\s*$')
+    in_fence = False
+    fence_ticks = 0
+    anchors_count: dict[str, int] = {}
+    toc: list[str] = []
+
+    for line in lines[start:]:
+        fm = FENCE_RE.match(line)
+        if fm:
+            ticks = len(fm.group('ticks'))
+            if not in_fence:
+                in_fence = True
+                fence_ticks = ticks
+            elif ticks >= fence_ticks and not fm.group('rest').strip():
+                in_fence = False
+            continue
+        if in_fence:
+            continue
+        m = heading_re.match(line)
+        if not m:
+            continue
+        level = len(m.group(1))   # 2..6  (H1 excluded by regex ^#{2,6})
+        text = m.group(2).strip()
+        base = _make_anchor(text)
+        n = anchors_count.get(base, 0)
+        anchors_count[base] = n + 1
+        anchor = base if n == 0 else f'{base}-{n}'
+        indent = '  ' * (level - 2)
+        toc.append(f'{indent}- [{text}](#{anchor})')
+    return toc
+
+
 def _process(lines: list[str]) -> list[str]:
     out: list[str] = []
     i, n = 0, len(lines)
@@ -208,6 +260,10 @@ def _process(lines: list[str]) -> list[str]:
             i = j
             continue
         if line.strip() == '[TOC]':
+            toc = _generate_toc(lines, i + 1)
+            if toc:
+                out.extend(toc)
+                out.append('')
             i += 1
             continue
         if 'emgithub.com/embed-v2.js' in line:
