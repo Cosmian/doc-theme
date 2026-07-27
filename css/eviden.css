@@ -31,10 +31,27 @@ html {
     letter-spacing: -0.01em;
 }
 
-/* Brand accent on links and active sidebar entry */
+/* Enforce clear heading size hierarchy (h2 24 → h3 20 → h4 17 → h5 14.5 px).
+   Without this, mdBook renders h4 at the same 16 px as body text. */
+.content h2 { font-size: 1.5rem; }
+.content h3 { font-size: 1.25rem; }
+.content h4 { font-size: 1.0625rem; }
+.content h5 { font-size: 0.9rem; font-weight: 600; }
+
+/* Brand accent on links and active sidebar entry.
+   Uses the darker accent because #e94e24 only reaches ~3.76:1 on white —
+   below the WCAG 1.4.3 minimum of 4.5:1 for body text.
+   --cosmian-accent-dark (#c73f1b) meets 4.5:1+ while staying on-brand. */
 .content a:link,
 .content a:visited {
-    color: var(--cosmian-accent);
+    color: var(--cosmian-accent-dark);
+}
+
+/* Underline on hover/focus: color alone isn't a sufficient link signifier
+   (WCAG 1.4.1) since these links live inline with regular body text. */
+.content a:hover,
+.content a:focus {
+    text-decoration: underline;
 }
 
 .chapter li.chapter-item a.active {
@@ -153,40 +170,55 @@ html.ayu  .emgithub-embed {
 
 /* Section headers with no link are rendered as <div> by mdBook.
    Make them fill the row and show a pointer so users know they're
-   interactive (JS in sidebar-expand.js proxies clicks to the toggle). */
+   interactive (JS in sidebar-expand.js proxies clicks to the toggle).
+   Override mdBook's default gray (#aaaaaa) so collapsible headers are
+   visually prominent — they should draw the eye, not look disabled. */
 .chapter li.chapter-item > div {
     flex: 1;
     min-width: 0;
     cursor: pointer;
+    color: var(--fg);
+    font-weight: 600;
+    opacity: 1;
 }
 
 /* ── Version switcher ─────────────────────────────────────────────────── */
 #version-switcher-mount {
+    display: flex;
     align-items: center;
-    margin-right: 0.4rem;
+    margin-right: 0.6rem;
 }
 
 #version-switcher {
     font-family: "Montserrat", sans-serif;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: var(--fg);
     background: var(--bg);
-    border: 1px solid var(--cosmian-accent);
+    border: 2px solid var(--cosmian-accent);
     border-radius: 4px;
-    padding: 0.2rem 1.4rem 0.2rem 0.5rem;
+    padding: 0.3rem 1.6rem 0.3rem 0.6rem;
     cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
     /* chevron using a data-URI so no extra asset is needed */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23e94e24'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 0.4rem center;
-    max-width: 11rem;
+    background-position: right 0.5rem center;
+    max-width: 12rem;
 }
 
 #version-switcher:hover,
 #version-switcher:focus {
     border-color: var(--cosmian-accent-dark);
     outline: none;
+}
+
+/* ── Theme picker (pinceau / paint-brush button) ──────────────────────────── */
+/* Hide the native mdBook multi-theme picker: we already provide a focused
+   light ↔ dark toggle via #theme-invert. The picker is redundant and
+   visually clutters the header. */
+#theme-toggle,
+#theme-list {
+    display: none !important;
 }
