@@ -18,7 +18,7 @@
     var style = document.createElement('style');
     style.textContent = [
       '#version-switcher-mount { align-items: center; padding: 0 8px; }',
-      '.ov-link { font-size: .82rem; color: var(--icons); white-space: nowrap;',
+      '.ov-link { font-size: 13px; color: var(--icons); white-space: nowrap;',
       '  text-decoration: none; border: 1px solid currentColor;',
       '  border-radius: 4px; padding: 2px 8px; }',
       '.ov-link:hover { color: var(--links); }',

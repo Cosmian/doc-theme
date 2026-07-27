@@ -109,7 +109,7 @@ html {
 /* Small label to the right of the logo: inherits theme text colour */
 .header-logo-subtitle {
     font-family: "Montserrat", sans-serif;
-    font-size: 0.7rem;
+    font-size: 1.1rem;  /* 11 px against 10 px root */
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -218,13 +218,13 @@ ol.chapter > li.chapter-item > a:not(.toggle) {
 
 #version-switcher {
     font-family: "Montserrat", sans-serif;
-    font-size: 0.85rem;
+    font-size: 1.4rem;  /* 14 px against 10 px root */
     font-weight: 600;
     color: var(--fg);
     background: var(--bg);
     border: 2px solid var(--cosmian-accent);
     border-radius: 4px;
-    padding: 0.3rem 1.6rem 0.3rem 0.6rem;
+    padding: 3px 16px 3px 6px;
     cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
@@ -232,7 +232,7 @@ ol.chapter > li.chapter-item > a:not(.toggle) {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23e94e24'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0.5rem center;
-    max-width: 12rem;
+    max-width: 120px;
 }
 
 #version-switcher:hover,
