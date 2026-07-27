@@ -31,12 +31,14 @@ html {
     letter-spacing: -0.01em;
 }
 
-/* Enforce clear heading size hierarchy (h2 24 → h3 20 → h4 17 → h5 14.5 px).
-   Without this, mdBook renders h4 at the same 16 px as body text. */
-.content h2 { font-size: 1.5rem; }
-.content h3 { font-size: 1.25rem; }
-.content h4 { font-size: 1.0625rem; }
-.content h5 { font-size: 0.9rem; font-weight: 600; }
+/* Heading size hierarchy — mdBook sets html { font-size: 62.5% } so 1 rem = 10 px.
+   Body text is 1.6 rem = 16 px.  All values below are in rem against that 10 px root.
+   Scale: H1 28 px → H2 22 px → H3 18 px → H4 17 px → H5 15 px */
+.content h1 { font-size: 2.8rem; }
+.content h2 { font-size: 2.2rem; }
+.content h3 { font-size: 1.8rem; }
+.content h4 { font-size: 1.7rem; }
+.content h5 { font-size: 1.5rem; font-weight: 600; }
 
 /* Brand accent on links and active sidebar entry.
    Uses the darker accent because #e94e24 only reaches ~3.76:1 on white —
@@ -196,16 +198,15 @@ ol.chapter > li.chapter-item + li.chapter-item {
 
 /* Section headers with no link (empty link in SUMMARY.md → rendered as <div>)
    and headers that do carry a link (rendered as <a>).
-   More-specific selector (0,2,3) overrides the general rule (0,2,2) above. */
+   Match nested section-header size (14 px = 1.4 rem against 10 px root) but use
+   Montserrat weight 700 to stay visually distinct from nested items (weight 600). */
 ol.chapter > li.chapter-item > div,
 ol.chapter > li.chapter-item > a:not(.toggle) {
     font-family: "Montserrat", sans-serif;
     font-weight: 700;
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-size: 1.4rem;
     color: var(--fg);
-    opacity: 0.9;
+    opacity: 1;
 }
 
 /* ── Version switcher ─────────────────────────────────────────────────── */
