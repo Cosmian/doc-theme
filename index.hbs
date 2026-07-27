@@ -337,6 +337,9 @@
 
         <script src="{{ resource "clipboard.min.js" }}"></script>
         <script src="{{ resource "highlight.js" }}"></script>
+        <!-- Shim: emgithub calls hljs.highlightElement() (highlight.js v11+ API)
+             but mdBook bundles an older version that only has hljs.highlightBlock(). -->
+        <script>if(window.hljs&&!hljs.highlightElement)hljs.highlightElement=hljs.highlightBlock.bind(hljs);</script>
         <script src="{{ resource "book.js" }}"></script>
 
         <!-- Custom JS scripts -->
