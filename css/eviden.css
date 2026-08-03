@@ -4,9 +4,7 @@
      Deep indigo     : #2b1493  (cosmian.com hero / dark section background)
      Medium purple   : #4e3bb3  (gradient midpoint)
      Light orange    : #f97850  (hover / gradient)
-   Fonts: Inter (body) · Montserrat (headings) */
-
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@400;500;600;700;800&display=swap");
+   Fonts: Inter (body) · Montserrat (headings), self-hosted — see fonts/fonts.css */
 
 :root {
     --cosmian-accent: #f14611;      /* Cosmian primary orange */
