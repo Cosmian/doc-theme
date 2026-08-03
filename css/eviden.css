@@ -513,6 +513,42 @@ html.ayu  .content blockquote {
     max-width: var(--content-max-width, 820px);
 }
 
+/* ── Reading measure + leading ────────────────────────────────────────────
+   Target ~75 characters per line (Bringhurst / Baymard). Inter's average
+   glyph advance at 16 px is 7.82 px, but the `ch` unit tracks the "0" glyph
+   (10.09 px here) — 29% wider than the average character. So 75 CPL is
+   ~58ch, not 75ch.
+   Only prose-bearing top-level blocks get the narrower measure. Tables,
+   code blocks and diagrams keep the full content width: they are scanned
+   two-dimensionally rather than read line by line, and narrowing them
+   forces gratuitous wrapping. (MDN's own content pane is ~700px, authored
+   against that width for the same reason.) */
+.content main > p,
+.content main > ul,
+.content main > ol,
+.content main > blockquote,
+.content main > .admonition {
+    max-width: 58ch;
+}
+
+/* Unitless so nested lists inherit the ratio rather than a fixed px
+   computed from the parent (mdBook ships line-height: 1.45em, which nested
+   <li> inherit verbatim regardless of their own font-size). */
+.content p,
+.content ul,
+.content ol,
+.content li {
+    line-height: 1.6;
+}
+
+/* Paragraph separation: was 16px (1x font-size) against a ~25.6px line box.
+   AAA (WCAG 1.4.8) asks for 1.5x line spacing; treated here as a readability
+   target rather than a compliance requirement, since AA (1.4.12) only
+   requires the layout to survive a user override, not ship one by default. */
+.content main > p {
+    margin-bottom: 2.4rem;
+}
+
 /* ── Mobile improvements ─────────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
