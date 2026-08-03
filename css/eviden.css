@@ -36,13 +36,37 @@ html {
 }
 
 /* Heading size hierarchy — mdBook sets html { font-size: 62.5% } so 1 rem = 10 px.
-   Body text is 1.6 rem = 16 px.  All values below are in rem against that 10 px root.
-   Scale: H1 28 px → H2 22 px → H3 18 px → H4 17 px → H5 15 px */
-.content h1 { font-size: 2.8rem; }
-.content h2 { font-size: 2.2rem; }
-.content h3 { font-size: 1.8rem; }
-.content h4 { font-size: 1.7rem; }
-.content h5 { font-size: 1.5rem; font-weight: 600; }
+   Body text is 1.6 rem = 16 px. All values below are in rem against that 10 px root.
+   Modular scale, ratio 1.2 (Minor Third), base 16 px = body:
+   H1 33 px → H2 28 px → H3 23 px → H4 19 px (steps 1.19 / 1.22 / 1.21 / 1.18).
+   The previous scale (28/22/18/17/15) put H4 at 1.06x body — visually
+   indistinguishable as a heading — and H5 smaller than body, an inverted
+   hierarchy. H4 is used 228 times across the docs, so that step matters most. */
+.content h1 { font-size: 3.3rem; }
+.content h2 { font-size: 2.8rem; }
+.content h3 { font-size: 2.3rem; }
+.content h4 { font-size: 1.9rem; }
+
+/* H5 stays at body size but is differentiated by weight/case/tracking rather
+   than by size — the same treatment already used on table headers below.
+   H5 is rare (6 uses today) so this is a safety net, not the common path. */
+.content h5 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* H6 has no rule in the previous scale — falls back to the browser default
+   (~0.67em, smaller than body). Zero uses in-repo today, but sub-repos are
+   separate repos and can introduce one; give it a defined, still-smallest
+   step rather than an inherited accident. */
+.content h6 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--fg);
+    opacity: 0.75;
+}
 
 /* Brand accent on links and active sidebar entry.
    Uses the darker accent because #e94e24 only reaches ~3.76:1 on white —
