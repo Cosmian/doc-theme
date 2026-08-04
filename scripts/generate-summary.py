@@ -297,6 +297,7 @@ def _parse_nav_yml(text: str) -> list:
     """
     result: list = []
     stack: list = [(-1, result)]
+    in_nav = False
 
     for raw in text.splitlines():
         line = raw.rstrip()
@@ -304,8 +305,18 @@ def _parse_nav_yml(text: str) -> list:
         if not stripped or stripped.startswith('#') or stripped == '---':
             continue
         indent = len(line) - len(stripped)
-        if stripped == 'nav:':
+
+        # Only parse list items that fall under the top-level `nav:` key.
+        # Files that are really a full (legacy) mkdocs.yml renamed to
+        # nav.yml also have top-level keys like markdown_extensions,
+        # plugins, extra_javascript, etc. — their list items must not be
+        # mistaken for nav entries.
+        if indent == 0:
+            in_nav = (stripped == 'nav:')
             continue
+        if not in_nav:
+            continue
+
         if not stripped.startswith('- '):
             continue
         content = stripped[2:]
