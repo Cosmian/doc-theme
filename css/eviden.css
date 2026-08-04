@@ -87,10 +87,6 @@ html {
     font-weight: 600;
 }
 
-#menu-bar {
-    border-bottom: 2px solid var(--cosmian-accent);
-}
-
 /* Slightly tighten code blocks to match the previous look */
 .content pre code {
     font-size: 0.85em;
@@ -105,7 +101,6 @@ html {
 
 /* The header follows the active theme background (same as sidebar & content).
    Only the orange accent border is fixed. */
-#menu-bar,
 #menu-bar-hover-placeholder {
     border-bottom: 2px solid var(--cosmian-accent);
 }
@@ -156,14 +151,6 @@ html.ayu  .content img {
 }
 
 /* ---- emgithub code embeds ---------------------------------------------- */
-/* emgithub injects code as <table> elements directly into the page DOM.
-   mdBook's global tr:nth-child(2n) zebra-striping must not apply to those
-   rows — reset it unconditionally inside any emgithub container. */
-.emgithub-embed table tr,
-.emgithub-embed table tr:nth-child(2n) {
-    background: unset;
-}
-
 /* emgithub always renders with a white/light Highlight.js theme
    (style=default or style=stackoverflow-light). In dark themes, apply the
    "night-mode" CSS filter: invert(1) darkens the background while
@@ -368,22 +355,6 @@ html.ayu  .content table thead tr {
     padding: 1.2rem 1.4rem;
     margin: 1.4rem 0;
     overflow-x: auto;
-}
-
-/* Language badge — shown via a data attribute added by highlight.js if present */
-.content pre[class*="language-"]::before,
-.content pre[class*="hljs"]::before {
-    content: attr(data-lang);
-    position: absolute;
-    top: 0.4rem;
-    right: 0.8rem;
-    font-family: "Montserrat", sans-serif;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--cosmian-accent);
-    opacity: 0.65;
 }
 
 /* ── Inline code ─────────────────────────────────────────────────────────── */
