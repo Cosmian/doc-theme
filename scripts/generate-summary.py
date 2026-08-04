@@ -511,6 +511,7 @@ SECTIONS: list[tuple[str, str, str]] = [
     # (display_title,           prefix,                 nav_source_rel)
     ('Getting started',        '',                     '.'),
     ('Key Management System',  'key_management_system', 'kms/documentation'),
+    ('KMS Clients',            'kms_clients',            'kms/cli_documentation'),
     ('Eviden VM',              'eviden_vm',              'cosmian_vm/documentation'),
     ('Eviden AI',              'eviden_ai',              'cosmian_ai'),
     ('Eviden Enclave',         'eviden_enclave',         'cosmian_enclave'),
