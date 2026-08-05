@@ -525,7 +525,7 @@ SECTIONS: list[tuple[str, str, str]] = [
     ('Eviden VM',              'eviden_vm',              'cosmian_vm/documentation'),
     ('Eviden AI',              'eviden_ai',              'cosmian_ai'),
     ('Eviden Enclave',         'eviden_enclave',         'cosmian_enclave'),
-    ('Findex',                 'findex',                 'findex-server/documentation'),
+    ('Findex Server',            'findex',                 'findex-server/documentation'),
     ('Authentication Verifier', 'authentication_verifier', 'authentication/server/documentation'),
 ]
 
