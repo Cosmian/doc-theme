@@ -14,13 +14,13 @@
 }
 
 html {
-    font-family: "Inter", "Open Sans", -apple-system, BlinkMacSystemFont,
+    font-family: "Montserrat", "Open Sans", -apple-system, BlinkMacSystemFont,
         "Segoe UI", Roboto, sans-serif;
 }
 
 .menu-title {
     font-family: "Montserrat", sans-serif;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .content h1,
@@ -29,8 +29,15 @@ html {
 .content h4,
 .content h5 {
     font-family: "Montserrat", sans-serif;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: -0.01em;
+}
+
+/* Explicit rule for bold/strong: match eviden.com's Montserrat Medium (500).
+   Using 600 keeps the emphasis clearly visible in a technical context. */
+.content strong,
+.content b {
+    font-weight: 600;
 }
 
 /* Heading size hierarchy — mdBook sets html { font-size: 62.5% } so 1 rem = 10 px.
@@ -50,7 +57,7 @@ html {
    H5 is rare (6 uses today) so this is a safety net, not the common path. */
 .content h5 {
     font-size: 1.6rem;
-    font-weight: 700;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.04em;
 }
@@ -61,7 +68,7 @@ html {
    step rather than an inherited accident. */
 .content h6 {
     font-size: 1.4rem;
-    font-weight: 700;
+    font-weight: 600;
     color: var(--fg);
     opacity: 0.75;
 }
@@ -94,9 +101,9 @@ html {
 
 /* ---- Eviden header / menu-bar banner ------------------------------------ */
 
-/* Taller banner: override mdBook's default 50 px menu bar height. */
+/* Banner height matching eviden.com's navigation bar (86 px). */
 :root {
-    --menu-bar-height: 68px;
+    --menu-bar-height: 86px;
 }
 
 /* The header follows the active theme background (same as sidebar & content).
@@ -105,7 +112,12 @@ html {
     border-bottom: 2px solid var(--cosmian-accent);
 }
 
-/* Orange EVIDEN logo + "Technical Documentation" label. */
+/* Establish a positioning context so the absolutely-centred title works. */
+#menu-bar {
+    position: relative;
+}
+
+/* Orange EVIDEN logo container — flex so the logo vertically centres. */
 .menu-bar .menu-title {
     display: flex;
     align-items: center;
@@ -116,23 +128,30 @@ html {
 .header-logo-link {
     display: flex;
     align-items: center;
-    gap: 0.65rem;
     text-decoration: none !important;
     color: inherit;
 }
 
+/* Logo dimensions matching eviden.com (172 × 34 px rendered).
+   With the corrected SVG viewBox (560 × 110), height 34 px → width ≈ 173 px. */
 .header-logo {
-    height: 40px;
+    height: 34px;
     width: auto;
     flex-shrink: 0;
 }
 
-/* Small label to the right of the logo: inherits theme text colour */
+/* "Technical Documentation" — absolutely centred in the full banner width,
+   vertically centred, pointer-events disabled so it never blocks clicks. */
 .header-logo-subtitle {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
     font-family: "Montserrat", sans-serif;
-    font-size: 1.1rem;  /* 11 px against 10 px root */
+    font-size: 2.4rem;  /* 24 px against 10 px root */
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     opacity: 0.55;
     white-space: nowrap;
@@ -216,7 +235,7 @@ ol.chapter > li.chapter-item + li.chapter-item {
 ol.chapter > li.chapter-item > div,
 ol.chapter > li.chapter-item > a:not(.toggle) {
     font-family: "Montserrat", sans-serif;
-    font-weight: 700;
+    font-weight: 600;
     font-size: 1.4rem;
     color: var(--fg);
     opacity: 1;

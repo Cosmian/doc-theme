@@ -107,7 +107,7 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            const default_theme = default_light_theme;
             let theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
@@ -179,9 +179,9 @@
                     <div class="menu-title">
                         <a href="{{ path_to_root }}index.html" class="header-logo-link" aria-label="{{ book_title }}">
                             <img class="header-logo" src="{{ path_to_root }}eviden-logo-orange.svg" alt="Eviden">
-                            <span class="header-logo-subtitle">Technical Documentation</span>
                         </a>
                     </div>
+                    <span class="header-logo-subtitle">Technical Documentation</span>
 
                     <div class="right-buttons">
                         <div id="version-switcher-mount" style="display:none"></div>
