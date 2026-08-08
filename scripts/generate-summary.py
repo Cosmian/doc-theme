@@ -522,11 +522,11 @@ SECTIONS: list[tuple[str, str, str]] = [
     # (display_title,           prefix,                 nav_source_rel)
     ('Getting started',        '',                     '.'),
     ('Key Management System',  'key_management_system', 'kms/documentation'),
+    ('Authentication Verifier', 'authentication_verifier', 'authentication/server/documentation'),
     ('Eviden VM',              'eviden_vm',              'cosmian_vm/documentation'),
     ('Eviden AI',              'eviden_ai',              'cosmian_ai'),
     ('Eviden Enclave',         'eviden_enclave',         'cosmian_enclave'),
     ('Findex Server',            'findex',                 'findex-server/documentation'),
-    ('Authentication Verifier', 'authentication_verifier', 'authentication/server/documentation'),
 ]
 
 # Directories under docs/ that are not documentation pages (build artefacts).

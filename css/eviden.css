@@ -642,3 +642,96 @@ html.ayu  .content a.header {
         display: none;
     }
 }
+
+/* ── KMS demo banner (matches Eviden Trustway DataProtect hero) ── */
+.kms-demo-banner {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+}
+.kms-demo-banner__bg {
+    position: absolute;
+    inset: 0;
+    background: url('https://eviden.com/wp-content/uploads/2025/10/Eviden_Trustway_Cosmian_Dataprotection-banner.jpg') center/cover no-repeat;
+    z-index: 0;
+}
+.kms-demo-banner__bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(26,26,26,.82) 0%, rgba(26,26,26,.55) 100%);
+}
+.kms-demo-banner__content {
+    position: relative;
+    z-index: 1;
+    padding: 1.8rem 2rem;
+    max-width: 600px;
+}
+.kms-demo-banner__tag {
+    display: inline-block;
+    font-family: "Montserrat", sans-serif;
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--cosmian-accent-dark, #c73f1b);
+    padding: .25rem .7rem;
+    border-radius: 4px;
+    margin-bottom: .75rem;
+}
+.kms-demo-banner__title {
+    font-family: "Montserrat", sans-serif;
+    font-size: 1.65rem;
+    font-weight: 500;
+    line-height: 1.35;
+    color: #fff;
+    margin: 0 0 1rem;
+}
+.kms-demo-banner__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    font-family: "Montserrat", sans-serif;
+    font-size: .95rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    background: #fff;
+    padding: .55rem 1.2rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background .2s, color .2s;
+}
+.kms-demo-banner__cta:hover {
+    background: #f0f0f0;
+    color: #1a1a1a;
+    text-decoration: none;
+}
+.kms-demo-banner__cta svg {
+    transition: transform .2s;
+}
+.kms-demo-banner__cta:hover svg {
+    transform: translateX(3px);
+}
+
+/* Dark themes (navy/coal/ayu): lighten overlay so banner doesn't blend in */
+html.coal .kms-demo-banner__bg::after,
+html.navy .kms-demo-banner__bg::after,
+html.ayu  .kms-demo-banner__bg::after {
+    background: linear-gradient(135deg, rgba(26,26,26,.6) 0%, rgba(26,26,26,.35) 100%);
+}
+html.coal .kms-demo-banner,
+html.navy .kms-demo-banner,
+html.ayu  .kms-demo-banner {
+    box-shadow: 0 0 0 1px rgba(255,255,255,.08);
+}
+
+@media (max-width: 768px) {
+    .kms-demo-banner { min-height: 150px; }
+    .kms-demo-banner__content { padding: 1.2rem 1.4rem; }
+    .kms-demo-banner__title { font-size: 1.25rem; }
+}
