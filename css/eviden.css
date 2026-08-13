@@ -735,3 +735,27 @@ html.ayu  .kms-demo-banner {
     .kms-demo-banner__content { padding: 1.2rem 1.4rem; }
     .kms-demo-banner__title { font-size: 1.25rem; }
 }
+
+/* ── Responsive banner ────────────────────────────────────────────────────
+   On narrow viewports the absolutely-centred "Technical Documentation"
+   subtitle overlaps the logo and the "All versions" button.  Hide it once
+   there is no longer enough room for all three elements to coexist. */
+@media (max-width: 700px) {
+    .header-logo-subtitle {
+        display: none;
+    }
+}
+
+/* On very narrow screens (phones in portrait mode) also shrink the logo
+   slightly so the left-buttons and right-buttons still have breathing room. */
+@media (max-width: 480px) {
+    .header-logo {
+        height: 24px;
+    }
+
+    /* Shrink "All versions" pill so it doesn't crowd the left buttons. */
+    .ov-link {
+        font-size: 11px;
+        padding: 2px 5px;
+    }
+}
