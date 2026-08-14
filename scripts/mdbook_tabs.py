@@ -1,12 +1,28 @@
 #!/usr/bin/env python3
-"""Minimal mdbook preprocessor that converts {{#tabs}} blocks to HTML.
+"""Minimal mdbook preprocessor that converts tab blocks to HTML.
 
 Installed as a preprocessor in book.toml:
 
     [preprocessor.tabs]
     command = "python3 ./mdbook_tabs.py"
 
-Syntax (produced by the convert_mkdocs.py migration script):
+Two equivalent syntaxes are supported:
+
+1. MkDocs Material syntax (preferred — kept verbatim in source files):
+
+    === "Tab 1"
+
+        content (any markdown, indented 4 spaces)
+
+    === "Tab 2"
+
+        content
+
+   A tab group is a maximal run of consecutive `=== "..."` lines at column 0.
+   Tab content is any indented (≥4 spaces) or blank line that follows the
+   header until the next header or an un-indented non-blank line.
+
+2. Explicit mdbook syntax (legacy — produced by the old convert_mkdocs.py):
 
     {{#tabs }}
     {{#tab name="Tab 1" }}
@@ -17,7 +33,7 @@ Syntax (produced by the convert_mkdocs.py migration script):
     {{#endtab }}
     {{#endtabs }}
 
-Global tabs (same name = same active selection across all containers on the page):
+   Global tabs (same name = same active selection across all containers):
 
     {{#tabs global="example" }}
     ...
@@ -54,8 +70,72 @@ _TAB_RE = re.compile(
     re.DOTALL,
 )
 
+# Matches a MkDocs Material tab header: === "Tab name"
+_MKDOCS_HEADER_RE = re.compile(r'^={3} "(.+)"$')
 
-# ---- conversion -----------------------------------------------------------
+
+# ---- MkDocs tab conversion ------------------------------------------------
+
+def _convert_mkdocs_tabs(content: str) -> str:
+    """Convert MkDocs Material === "..." tab groups to {{#tabs}} syntax.
+
+    A group is a maximal sequence of === "..." blocks at column 0.  Each
+    tab's body is the indented (≥4 spaces) or blank lines that immediately
+    follow the header, dedented by 4 spaces.
+    """
+    lines = content.splitlines(keepends=True)
+    out: list[str] = []
+    i = 0
+    while i < len(lines):
+        m = _MKDOCS_HEADER_RE.match(lines[i].rstrip("\n"))
+        if not m:
+            out.append(lines[i])
+            i += 1
+            continue
+
+        # Collect all consecutive tabs in this group.
+        tabs: list[tuple[str, str]] = []
+        while i < len(lines):
+            hdr = _MKDOCS_HEADER_RE.match(lines[i].rstrip("\n"))
+            if not hdr:
+                break
+            name = hdr.group(1)
+            i += 1  # consume the === line
+
+            body_lines: list[str] = []
+            while i < len(lines):
+                raw = lines[i].rstrip("\n")
+                if raw == "":
+                    body_lines.append("")
+                    i += 1
+                elif raw.startswith("    "):
+                    body_lines.append(raw[4:])  # dedent 4 spaces
+                    i += 1
+                else:
+                    break
+
+            # Strip leading/trailing blank lines from the body.
+            while body_lines and body_lines[0] == "":
+                body_lines.pop(0)
+            while body_lines and body_lines[-1] == "":
+                body_lines.pop()
+
+            tabs.append((name, "\n".join(body_lines)))
+
+        # Emit the {{#tabs}} block.
+        out.append("{{#tabs }}\n")
+        for name, body in tabs:
+            out.append(f'{{{{#tab name="{name}" }}}}\n')
+            if body:
+                out.append(body + "\n")
+            out.append("\n")
+            out.append("{{#endtab }}\n")
+        out.append("{{#endtabs }}\n")
+
+    return "".join(out)
+
+
+# ---- {{#tabs}} → HTML conversion ------------------------------------------
 
 def _tabs_to_html(match: re.Match) -> str:
     global_name = match.group("global")
@@ -85,10 +165,7 @@ def _tabs_to_html(match: re.Match) -> str:
     panels = []
     for i, (name, body) in enumerate(tabs):
         hidden = " hidden" if i > 0 else ""
-        # textwrap.dedent strips the common leading whitespace from all lines
-        # (handles tabs whose content was 6-space or 8-space indented in the
-        # original MkDocs source and was only partially dedented by the
-        # conversion script).
+        # textwrap.dedent strips any residual common leading whitespace.
         body_clean = textwrap.dedent(body.strip("\n")).strip()
         panel = (
             f'<div class="mdbook-tab-content{hidden}" data-tabname="{name}">\n'
@@ -108,6 +185,10 @@ def _tabs_to_html(match: re.Match) -> str:
 
 
 def convert_content(content: str) -> str:
+    # Step 1: normalise MkDocs === "..." groups to {{#tabs}} syntax.
+    if '=== "' in content:
+        content = _convert_mkdocs_tabs(content)
+    # Step 2: render {{#tabs}} blocks to HTML.
     return _TABS_RE.sub(_tabs_to_html, content)
 
 
