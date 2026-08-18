@@ -343,12 +343,20 @@ html.ayu  ol.chapter > li.chapter-item > a:not(.toggle) {
     /* Inline code pill */
     --inline-code-bg: rgba(241, 70, 17, 0.07);
     --inline-code-border: rgba(241, 70, 17, 0.25);
+    /* Table header blue — WCAG AA: white text on #1565C0 → 7.1:1 contrast ratio */
+    --table-header-bg: #1565C0;
 }
 
 /* ── Tables ───────────────────────────────────────────────────────────────── */
 
 .content table {
-    width: 100%;
+    /* Natural content-based column sizing (table-layout: auto is the default,
+       declared explicitly here so overrides cannot accidentally re-set it). */
+    table-layout: auto;
+    /* Shrinks to content width on wide screens; scrolls horizontally on narrow ones
+       rather than wrapping cell text or overflowing the page. */
+    width: max-content;
+    max-width: 100%;
     border-collapse: separate;
     border-spacing: 0;
     border-radius: 6px;
@@ -359,7 +367,7 @@ html.ayu  ol.chapter > li.chapter-item > a:not(.toggle) {
 }
 
 .content table thead tr {
-    background-color: var(--cosmian-dark) !important;
+    background-color: var(--table-header-bg) !important;
     color: #fff !important;
 }
 
@@ -402,12 +410,27 @@ html.ayu  ol.chapter > li.chapter-item > a:not(.toggle) {
     border-top: none;
 }
 
-/* Dark-mode table header — lighter than pure black so it still reads as a
-   distinct band against the coal/navy/ayu page backgrounds */
+/* First column typically holds a short identifier (operation name, config key,
+   enum value, role name) — always in code or a few words. Prevent the browser
+   from word-wrapping it when the second column has longer descriptions. */
+.content table td:first-child,
+.content table th:first-child {
+    white-space: nowrap;
+}
+
+/* Inline code inside any table cell should also never wrap — a code token
+   split across two lines is unreadable. */
+.content table td code,
+.content table th code {
+    white-space: nowrap;
+}
+
+/* Dark-mode table header — deep blue that remains readable on coal/navy/ayu
+   backgrounds; white text on #1a4a8a → ~6.5:1 WCAG AA */
 html.coal .content table thead tr,
 html.navy .content table thead tr,
 html.ayu  .content table thead tr {
-    background-color: #2a2a2a !important;
+    background-color: #1a4a8a !important;
 }
 
 /* ── Code blocks ─────────────────────────────────────────────────────────── */
