@@ -115,11 +115,7 @@ html.ayu  .content a:visited {
     --menu-bar-height: 86px;
 }
 
-/* The header follows the active theme background (same as sidebar & content).
-   Only the orange accent border is fixed. */
-#menu-bar-hover-placeholder {
-    border-bottom: 2px solid var(--cosmian-accent);
-}
+/* The header follows the active theme background (same as sidebar & content). */
 
 /* Establish a positioning context so the absolutely-centred title works. */
 #menu-bar {
