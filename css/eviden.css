@@ -688,7 +688,6 @@ html.ayu  .content a.header {
     position: relative;
     z-index: 1;
     padding: 1.8rem 2rem;
-    max-width: 600px;
 }
 .kms-demo-banner__tag {
     display: inline-block;
