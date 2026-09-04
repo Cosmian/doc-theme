@@ -206,18 +206,26 @@
 
                 {{#if search_enabled}}
                 <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
-                        <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
-                            <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
+                    <div class="search-popup">
+                        <form id="searchbar-outer" class="searchbar-outer">
+                            <div class="search-wrapper">
+                                <i class="fa fa-search search-icon" aria-hidden="true"></i>
+                                <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                                <kbd class="search-esc-hint">Esc</kbd>
+                                <div class="spinner-wrapper">
+                                    <i class="fa fa-spinner fa-spin"></i>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="searchresults-outer" class="searchresults-outer hidden">
+                            <div id="searchresults-header" class="searchresults-header"></div>
+                            <ul id="searchresults">
+                            </ul>
+                            <div class="searchresults-footer">
+                                <span><kbd>&uarr;</kbd><kbd>&darr;</kbd> Navigate</span>
+                                <span><kbd>&crarr;</kbd> Select</span>
                             </div>
                         </div>
-                    </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
-                        </ul>
                     </div>
                 </div>
                 {{/if}}
