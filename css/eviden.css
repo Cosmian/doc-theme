@@ -728,6 +728,20 @@ html.ayu  .content a.header {
     color: var(--fg);
 }
 
+/* Matched search term within the title (added by search-modal.js, since
+   searcher.js itself never highlights matches there). Same light/dark
+   accent split used for the teaser <em> below. */
+#search-wrapper #searchresults li a mark {
+    background: none;
+    color: var(--cosmian-accent-dark);
+}
+
+html.coal #search-wrapper #searchresults li a mark,
+html.navy #search-wrapper #searchresults li a mark,
+html.ayu  #search-wrapper #searchresults li a mark {
+    color: var(--cosmian-accent);
+}
+
 #search-wrapper #searchresults span.teaser {
     margin: 4px 0 0;
     font-size: 13px;
