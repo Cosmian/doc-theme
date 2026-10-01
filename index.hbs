@@ -73,6 +73,19 @@
         </script>
         <!-- Start loading toc.js asap -->
         <script src="{{ resource "toc.js" }}"></script>
+
+        <!-- Non-rendered chapter-navigation hooks: mdBook's keyboard handler
+             (book.js) queries `.nav-chapters.previous` / `.nav-chapters.next`
+             for Left/Right arrow navigation. The visible arrow buttons were
+             removed from the body in favour of the page TOC; these <link>
+             elements keep the keyboard shortcut working without adding a
+             hidden focusable control to the page. -->
+        {{#previous}}
+        <link rel="prev" href="{{ path_to_root }}{{link}}" class="nav-chapters previous">
+        {{/previous}}
+        {{#next}}
+        <link rel="next" href="{{ path_to_root }}{{link}}" class="nav-chapters next">
+        {{/next}}
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -285,42 +298,20 @@
                             }
                         })();
                     </script>
-                    <main>
-                        {{{ content }}}
-                    </main>
+                    <div class="content-layout">
+                        <main>
+                            {{{ content }}}
+                        </main>
 
-                    <nav class="nav-wrapper" aria-label="Page navigation">
-                        <!-- Mobile navigation buttons -->
-                        {{#previous}}
-                            <a rel="prev" href="{{ path_to_root }}{{link}}" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
-                            </a>
-                        {{/previous}}
-
-                        {{#next}}
-                            <a rel="next prefetch" href="{{ path_to_root }}{{link}}" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                        {{/next}}
-
-                        <div style="clear: both"></div>
-                    </nav>
+                        {{#unless is_print}}
+                        <aside class="page-toc" hidden>
+                            <div class="page-toc__title" id="page-toc-title">On this page</div>
+                            <nav class="page-toc__nav" aria-labelledby="page-toc-title"></nav>
+                        </aside>
+                        {{/unless}}
+                    </div>
                 </div>
             </div>
-
-            <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                {{#previous}}
-                    <a rel="prev" href="{{ path_to_root }}{{link}}" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
-                    </a>
-                {{/previous}}
-
-                {{#next}}
-                    <a rel="next prefetch" href="{{ path_to_root }}{{link}}" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
-                {{/next}}
-            </nav>
 
         </div>
 
@@ -399,6 +390,73 @@
         {{#each additional_js}}
         <script src="{{ resource this}}"></script>
         {{/each}}
+
+        {{#unless is_print}}
+        <script>
+        (function () {
+            'use strict';
+            var toc = document.querySelector('.page-toc');
+            if (!toc) return;
+            var nav = toc.querySelector('.page-toc__nav');
+
+            var headings = Array.prototype.filter.call(
+                document.querySelectorAll('main h2, main h3'),
+                function (h) {
+                    return !h.closest('.mdbook-tab-content, details');
+                }
+            );
+            if (headings.length < 2) return;
+
+            var links = [];
+            headings.forEach(function (h) {
+                var anchor = h.querySelector('a.header') || h.querySelector('a[id]') || h;
+                var id = anchor.id || h.id;
+                if (!id) return;
+
+                var link = document.createElement('a');
+                link.href = '#' + id;
+                link.textContent = h.textContent;
+                if (h.tagName === 'H3') link.classList.add('page-toc__sub');
+
+                nav.appendChild(link);
+                links.push({ heading: h, link: link });
+            });
+            if (links.length < 2) return;
+
+            toc.hidden = false;
+
+            var ACTIVATION_LINE = 100;
+            var ticking = false;
+
+            function updateActive() {
+                ticking = false;
+                var active = links[0];
+                for (var i = 0; i < links.length; i++) {
+                    if (links[i].heading.getBoundingClientRect().top <= ACTIVATION_LINE) {
+                        active = links[i];
+                    }
+                }
+                links.forEach(function (entry) {
+                    if (entry === active) {
+                        entry.link.setAttribute('aria-current', 'location');
+                    } else {
+                        entry.link.removeAttribute('aria-current');
+                    }
+                });
+            }
+
+            function onScroll() {
+                if (ticking) return;
+                ticking = true;
+                window.requestAnimationFrame(updateActive);
+            }
+
+            updateActive();
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', onScroll, { passive: true });
+        })();
+        </script>
+        {{/unless}}
 
         {{#if is_print}}
         {{#if mathjax_support}}

@@ -796,6 +796,138 @@ body:has(#search-wrapper:not(.hidden)) {
     max-width: var(--content-max-width, 820px);
 }
 
+/* ── Page table of contents ─────────────────────────────────────────────── */
+
+:root {
+    --page-toc-width: 220px;
+    --page-toc-gap: 32px;
+}
+
+/* mdBook's .content is overflow-y: auto (general.css), which creates its own
+   scroll container and prevents any sticky descendant from sticking to the
+   viewport. Keep horizontal clipping (avoids a horizontal scrollbar) but
+   hand vertical scrolling back to the document so `position: sticky` below
+   can work. */
+.content {
+    overflow-x: clip;
+    overflow-y: visible;
+}
+
+.page-toc {
+    display: none;
+}
+
+.page-toc__title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--fg);
+    opacity: 0.6;
+    margin-bottom: 1rem;
+}
+
+.page-toc__nav {
+    display: flex;
+    flex-direction: column;
+}
+
+.page-toc__nav a {
+    display: block;
+    padding-block: 0.4rem;
+    padding-inline-start: 0.8rem;
+    font-size: 1.4rem;
+    line-height: 1.4;
+    color: var(--fg);
+    opacity: 0.75;
+    text-decoration: none;
+    border-inline-start: 2px solid transparent;
+}
+
+.page-toc__nav a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.page-toc__nav a.page-toc__sub {
+    padding-inline-start: 1.8rem;
+    font-size: 1.3rem;
+}
+
+.page-toc__nav a[aria-current="location"] {
+    opacity: 1;
+    font-weight: 600;
+    color: var(--cosmian-accent-dark);
+    border-inline-start-color: var(--cosmian-accent-dark);
+}
+
+html.coal .page-toc__nav a[aria-current="location"],
+html.navy .page-toc__nav a[aria-current="location"],
+html.ayu  .page-toc__nav a[aria-current="location"] {
+    color: var(--cosmian-accent);
+    border-inline-start-color: var(--cosmian-accent);
+}
+
+/* Sidebar-aware breakpoints: the 300px left sidebar is fixed-width, so
+   whether it is open changes how much room is left for the two-column
+   grid. Both rulesets are identical apart from the html-state selector and
+   the min-width threshold (measured against real .content inner widths). */
+@media (min-width: 1127px) {
+    html:not(.sidebar-visible) .content-layout {
+        display: grid;
+        grid-template-columns: minmax(0, var(--content-max-width, 820px)) var(--page-toc-width);
+        column-gap: var(--page-toc-gap);
+        max-width: calc(var(--content-max-width, 820px) + var(--page-toc-gap) + var(--page-toc-width));
+        margin-inline-start: auto;
+        margin-inline-end: auto;
+    }
+    /* Explicit grid tracks are always reserved, whether or not `.page-toc` is
+       rendered as a grid item — so the article column stays put on pages
+       with fewer than two headings instead of re-centering. */
+    html:not(.sidebar-visible) .page-toc {
+        display: block;
+        position: sticky;
+        top: var(--menu-bar-height, 86px);
+        align-self: start;
+        max-height: calc(100vh - var(--menu-bar-height, 86px) - 2rem);
+        overflow-y: auto;
+    }
+    /* `.page-toc[hidden]` alone loses to `.page-toc { display: block }` above
+       on specificity; repeat the attribute selector inside the same scope so
+       it always wins. */
+    html:not(.sidebar-visible) .page-toc[hidden] {
+        display: none;
+    }
+}
+
+@media (min-width: 1435px) {
+    html.sidebar-visible .content-layout {
+        display: grid;
+        grid-template-columns: minmax(0, var(--content-max-width, 820px)) var(--page-toc-width);
+        column-gap: var(--page-toc-gap);
+        max-width: calc(var(--content-max-width, 820px) + var(--page-toc-gap) + var(--page-toc-width));
+        margin-inline-start: auto;
+        margin-inline-end: auto;
+    }
+    html.sidebar-visible .page-toc {
+        display: block;
+        position: sticky;
+        top: var(--menu-bar-height, 86px);
+        align-self: start;
+        max-height: calc(100vh - var(--menu-bar-height, 86px) - 2rem);
+        overflow-y: auto;
+    }
+    html.sidebar-visible .page-toc[hidden] {
+        display: none;
+    }
+}
+
+@media print {
+    .page-toc {
+        display: none !important;
+    }
+}
+
 /* Unitless so nested lists inherit the ratio rather than a fixed px
    computed from the parent (mdBook ships line-height: 1.45em, which nested
    <li> inherit verbatim regardless of their own font-size). */
