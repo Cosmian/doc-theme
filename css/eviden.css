@@ -435,8 +435,13 @@ html.ayu  .content table thead tr {
     position: relative;
     border-radius: 8px;
     border-left: 4px solid var(--cosmian-accent);
-    padding: 1.2rem 1.4rem;
+    padding: 0;
     margin: 1.4rem 0;
+    overflow: hidden;
+}
+
+.content pre > code {
+    padding: 1.2rem 1.4rem;
     overflow-x: auto;
 }
 
@@ -823,7 +828,7 @@ body:has(#search-wrapper:not(.hidden)) {
         -webkit-overflow-scrolling: touch;
     }
 
-    .content pre {
+    .content pre > code {
         padding: 0.9rem 1rem;
     }
 
