@@ -445,6 +445,16 @@ html.ayu  .content table thead tr {
     overflow-x: auto;
 }
 
+/* Beside the copy button: above it, pre's overflow clips it */
+.content pre > .buttons .tooltiptext {
+    top: 50%;
+    left: auto;
+    right: 100%;
+    transform: translateY(-50%);
+    margin: 0 4px 0 0;
+    white-space: nowrap;
+}
+
 /* ── Inline code ─────────────────────────────────────────────────────────── */
 
 .content :not(pre) > code {
