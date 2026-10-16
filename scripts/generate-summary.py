@@ -21,10 +21,15 @@ from __future__ import annotations
 
 import argparse
 import html
+import os
 import re
 import shutil
 import sys
 from pathlib import Path
+
+# Docs CI sets this so one duplicate nav entry cannot abort the build before
+# every section is checked; staging leaves it unset and mdBook fails as before.
+SKIP_DUPLICATES = os.environ.get('SUMMARY_SKIP_DUPLICATES') == '1'
 
 # ═══════════════════════════════════════════════════════════════
 # Markdown conversion — for old MkDocs-format tags
@@ -380,7 +385,8 @@ def load_nav(doc_dir: Path, fmt: str) -> list:
 # ═══════════════════════════════════════════════════════════════
 
 def _summary_lines(items: list, src_dir: Path, prefix: str, depth: int,
-                   missing: list[str]) -> list[str]:
+                   missing: list[str], seen: set[str],
+                   duplicates: list[str]) -> list[str]:
     pad = '  ' * depth
     lines: list[str] = []
     for item in items:
@@ -388,13 +394,19 @@ def _summary_lines(items: list, src_dir: Path, prefix: str, depth: int,
         title = html.unescape(str(title)).strip()
         if isinstance(value, list):
             lines.append(f'{pad}- [{title}]()')
-            lines.extend(_summary_lines(value, src_dir, prefix, depth + 1, missing))
+            lines.extend(_summary_lines(value, src_dir, prefix, depth + 1,
+                                        missing, seen, duplicates))
         else:
             rel = str(value).strip()
             full_path = prefix + rel if prefix else rel
             if not (src_dir / full_path).exists():
                 missing.append(full_path)
                 continue
+            if full_path in seen:
+                duplicates.append(full_path)
+                if SKIP_DUPLICATES:
+                    continue
+            seen.add(full_path)
             lines.append(f'{pad}- [{title}]({full_path})')
     return lines
 
@@ -405,12 +417,15 @@ def build_summary_block(nav: list, src_dir: Path, prefix: str = '') -> list[str]
     prefix: prepended to every file path, e.g. 'key_management_system/'.
     """
     missing: list[str] = []
-    lines = _summary_lines(nav, src_dir, prefix, 0, missing)
+    duplicates: list[str] = []
+    lines = _summary_lines(nav, src_dir, prefix, 0, missing, set(), duplicates)
     if missing:
         print(f'  WARNING: {len(missing)} nav targets missing (skipped):',
               file=sys.stderr)
         for p in missing:
             print(f'    - {p}', file=sys.stderr)
+    for p in duplicates:
+        print(f'  ERROR: duplicate nav entry: {p}', file=sys.stderr)
     return lines
 
 
