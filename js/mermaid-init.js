@@ -3,8 +3,8 @@
 // file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 (() => {
-    const darkThemes = ['ayu', 'navy', 'coal'];
-    const lightThemes = ['light', 'rust'];
+    const darkThemes = ['navy'];
+    const lightThemes = ['light'];
 
     const classList = document.getElementsByTagName('html')[0].classList;
 
