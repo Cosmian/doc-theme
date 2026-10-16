@@ -535,21 +535,6 @@ def build_combined() -> None:
     if converted_root:
         print(f'  converted {converted_root} .md file(s) (MkDocs admonitions/tabs)')
 
-    # ── Step 2: (legacy) per-section conversion for old-format (mkdocs.yml) sections.
-    #   Step 1b above already converts ALL sections universally; this loop is
-    #   retained only to emit per-section log output for old-format sections.
-    for _, prefix, nav_source_rel in SECTIONS:
-        if not prefix:
-            continue
-        nav_source = ROOT / nav_source_rel
-        if not nav_source.exists():
-            continue
-        try:
-            fmt = detect_format(nav_source)
-        except FileNotFoundError:
-            continue
-        # No additional conversion needed — step 1b already handled everything.
-
     # ── Step 3: build combined SUMMARY.md
     summary_lines = ['# Summary', '']
     for top_title, prefix, nav_source_rel in SECTIONS:
