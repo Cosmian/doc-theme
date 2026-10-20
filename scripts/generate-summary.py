@@ -352,15 +352,20 @@ def _summary_lines(items: list, src_dir: Path, prefix: str, depth: int,
     return lines
 
 
-def build_summary_block(nav: list, src_dir: Path, prefix: str = '') -> list[str]:
+def build_summary_block(nav: list, src_dir: Path, prefix: str = '',
+                        strict_nav: bool = False) -> list[str]:
     """Return SUMMARY.md lines for one section (no top-level section header).
 
     prefix: prepended to every file path, e.g. 'key_management_system/'.
     """
+    if strict_nav and not nav:
+        raise ValueError(f'Empty navigation for {prefix or src_dir}')
     missing: list[str] = []
     duplicates: list[str] = []
     lines = _summary_lines(nav, src_dir, prefix, 0, missing, set(), duplicates)
     if missing:
+        if strict_nav:
+            raise FileNotFoundError('Missing navigation targets: ' + ', '.join(missing))
         print(f'  WARNING: {len(missing)} nav targets missing (skipped):',
               file=sys.stderr)
         for p in missing:
@@ -412,7 +417,7 @@ command = "mdbook-mermaid"
 # Standalone mode  (python3 generate-summary.py <doc_dir>)
 # ═══════════════════════════════════════════════════════════════
 
-def build_standalone(doc_dir: Path) -> None:
+def build_standalone(doc_dir: Path, strict_nav: bool = False) -> None:
     docs = doc_dir / 'docs'
 
     if not docs.exists():
@@ -458,7 +463,7 @@ def build_standalone(doc_dir: Path) -> None:
         # src == docs: write SUMMARY.md in-place, no copy needed
         print(f'  in-place mode (src = "{src_rel}"): generating SUMMARY.md only')
 
-    lines = ['# Summary', ''] + build_summary_block(nav, src) + ['']
+    lines = ['# Summary', ''] + build_summary_block(nav, src, strict_nav=strict_nav) + ['']
     (src / 'SUMMARY.md').write_text('\n'.join(lines), encoding='utf-8')
     print(f'  wrote {src}/SUMMARY.md')
 
@@ -495,7 +500,7 @@ _ARTIFACTS = [
 ]
 
 
-def build_combined() -> None:
+def build_combined(strict_nav: bool = False) -> None:
     docs = ROOT / 'docs'
     src = ROOT / 'src'
 
@@ -555,19 +560,23 @@ def build_combined() -> None:
     for top_title, prefix, nav_source_rel in SECTIONS:
         nav_source = ROOT / nav_source_rel
         if not nav_source.exists():
+            if strict_nav:
+                raise FileNotFoundError(f'Navigation source not found: {nav_source_rel}')
             print(f'  WARNING: nav source {nav_source_rel!r} not found, '
                   f'skipping "{top_title}"', file=sys.stderr)
             continue
         try:
             fmt = detect_format(nav_source)
         except FileNotFoundError:
+            if strict_nav:
+                raise
             print(f'  WARNING: no nav file in {nav_source_rel!r}, '
                   f'skipping "{top_title}"', file=sys.stderr)
             continue
 
         nav = load_nav(nav_source, fmt)
         prefix_slash = prefix + '/' if prefix else ''
-        block = build_summary_block(nav, src, prefix_slash)
+        block = build_summary_block(nav, src, prefix_slash, strict_nav=strict_nav)
 
         summary_lines.append(f'- [{top_title}]()')
         summary_lines.extend('  ' + ln if ln.strip() else ln for ln in block)
@@ -598,18 +607,21 @@ def main() -> None:
         '--combined', action='store_true',
         help='Build the combined aggregated book (reads all section nav files)')
     parser.add_argument(
+        '--strict-nav', action='store_true',
+        help='Fail on missing navigation sources, empty navigation or missing pages')
+    parser.add_argument(
         'doc_dir', nargs='?',
         help='Path to a documentation directory for standalone build')
     args = parser.parse_args()
 
     if args.combined:
         print('Building combined aggregated book ...')
-        build_combined()
+        build_combined(strict_nav=args.strict_nav)
         print('Done.')
     elif args.doc_dir:
         doc_dir = Path(args.doc_dir).resolve()
         print(f'Building standalone: {doc_dir}')
-        build_standalone(doc_dir)
+        build_standalone(doc_dir, strict_nav=args.strict_nav)
         print('Done.')
     else:
         parser.print_help()
