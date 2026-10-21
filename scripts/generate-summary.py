@@ -483,10 +483,10 @@ SECTIONS: list[tuple[str, str, str]] = [
     # (display_title,           prefix,                 nav_source_rel)
     ('Getting started',        '',                     '.'),
     ('Key Management System',  'key_management_system', 'kms/documentation'),
-    ('Authentication Verifier', 'authentication_verifier', 'authentication/server/documentation'),
     ('Eviden VM',              'eviden_vm',              'cosmian_vm/documentation'),
     ('Eviden AI',              'eviden_ai',              'cosmian_ai'),
     ('Eviden Enclave',         'eviden_enclave',         'cosmian_enclave'),
+    ('Authentication Verifier', 'authentication_verifier', 'authentication/server/documentation'),
     ('Findex Server',            'findex',                 'findex-server/documentation'),
 ]
 
@@ -539,21 +539,6 @@ def build_combined(strict_nav: bool = False) -> None:
         print(f'  stripped frontmatter from {fm_stripped} .md file(s)')
     if converted_root:
         print(f'  converted {converted_root} .md file(s) (MkDocs admonitions/tabs)')
-
-    # ── Step 2: (legacy) per-section conversion for old-format (mkdocs.yml) sections.
-    #   Step 1b above already converts ALL sections universally; this loop is
-    #   retained only to emit per-section log output for old-format sections.
-    for _, prefix, nav_source_rel in SECTIONS:
-        if not prefix:
-            continue
-        nav_source = ROOT / nav_source_rel
-        if not nav_source.exists():
-            continue
-        try:
-            fmt = detect_format(nav_source)
-        except FileNotFoundError:
-            continue
-        # No additional conversion needed — step 1b already handled everything.
 
     # ── Step 3: build combined SUMMARY.md
     summary_lines = ['# Summary', '']

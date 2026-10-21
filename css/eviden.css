@@ -76,18 +76,14 @@ html {
 /* Brand accent on links and active sidebar entry.
    Light theme: --cosmian-accent-dark (#c73f1b) reaches 4.5:1 on white — WCAG AA.
    Dark themes: dark orange becomes unreadable on dark backgrounds, so we
-   switch to the bright accent (#f14611) which hits ~5:1 on coal/navy/ayu. */
+   switch to the bright accent (#f14611) which hits ~5:1 on navy. */
 .content a:link,
 .content a:visited {
     color: var(--cosmian-accent-dark);
 }
 
-html.coal .content a:link,
-html.coal .content a:visited,
 html.navy .content a:link,
-html.navy .content a:visited,
-html.ayu  .content a:link,
-html.ayu  .content a:visited {
+html.navy .content a:visited {
     color: var(--cosmian-accent);
 }
 
@@ -166,9 +162,7 @@ html.ayu  .content a:visited {
 /* draw.io / SVG diagrams export with hardcoded black text (color: rgb(0,0,0))
    that becomes invisible on dark page backgrounds. Give all content images a
    light card background so they are always readable. */
-html.coal .content img,
-html.navy .content img,
-html.ayu  .content img {
+html.navy .content img {
     background-color: #f6f8fa;
     border-radius: 4px;
     padding: 6px;
@@ -179,9 +173,7 @@ html.ayu  .content img {
    (style=default or style=stackoverflow-light). In dark themes, apply the
    "night-mode" CSS filter: invert(1) darkens the background while
    hue-rotate(180deg) approximately restores syntax-highlight colours. */
-html.coal .emgithub-embed,
-html.navy .emgithub-embed,
-html.ayu  .emgithub-embed {
+html.navy .emgithub-embed {
     filter: invert(1) hue-rotate(180deg);
     border-radius: 4px;
     overflow: hidden;
@@ -271,12 +263,8 @@ ol.chapter > li.chapter-item > a:not(.toggle) {
     opacity: 1;
 }
 
-html.coal ol.chapter > li.chapter-item > div,
-html.coal ol.chapter > li.chapter-item > a:not(.toggle),
 html.navy ol.chapter > li.chapter-item > div,
-html.navy ol.chapter > li.chapter-item > a:not(.toggle),
-html.ayu  ol.chapter > li.chapter-item > div,
-html.ayu  ol.chapter > li.chapter-item > a:not(.toggle) {
+html.navy ol.chapter > li.chapter-item > a:not(.toggle) {
     color: var(--cosmian-accent);
 }
 
@@ -312,10 +300,7 @@ html.ayu  ol.chapter > li.chapter-item > a:not(.toggle) {
     outline: none;
 }
 
-/* ── Theme picker (pinceau / paint-brush button) ──────────────────────────── */
-/* Hide the native mdBook multi-theme picker: we already provide a focused
-   light ↔ dark toggle via #theme-invert. The picker is redundant and
-   visually clutters the header. */
+/* Hidden, not removed: mdBook's book.js needs these elements; #theme-invert replaces them */
 #theme-toggle,
 #theme-list {
     display: none !important;
@@ -421,11 +406,9 @@ html.ayu  ol.chapter > li.chapter-item > a:not(.toggle) {
     white-space: nowrap;
 }
 
-/* Dark-mode table header — deep blue that remains readable on coal/navy/ayu
+/* Dark-mode table header — deep blue that remains readable on navy
    backgrounds; white text on #1a4a8a → ~6.5:1 WCAG AA */
-html.coal .content table thead tr,
-html.navy .content table thead tr,
-html.ayu  .content table thead tr {
+html.navy .content table thead tr {
     background-color: #1a4a8a !important;
 }
 
@@ -445,6 +428,16 @@ html.ayu  .content table thead tr {
     overflow-x: auto;
 }
 
+/* Beside the copy button: above it, pre's overflow clips it */
+.content pre > .buttons .tooltiptext {
+    top: 50%;
+    left: auto;
+    right: 100%;
+    transform: translateY(-50%);
+    margin: 0 4px 0 0;
+    white-space: nowrap;
+}
+
 /* ── Inline code ─────────────────────────────────────────────────────────── */
 
 .content :not(pre) > code {
@@ -456,9 +449,7 @@ html.ayu  .content table thead tr {
     word-break: break-word;
 }
 
-html.coal .content :not(pre) > code,
-html.navy .content :not(pre) > code,
-html.ayu  .content :not(pre) > code {
+html.navy .content :not(pre) > code {
     --inline-code-bg: rgba(241, 70, 17, 0.12);
     --inline-code-border: rgba(241, 70, 17, 0.3);
 }
@@ -478,9 +469,7 @@ html.ayu  .content :not(pre) > code {
     margin-bottom: 0;
 }
 
-html.coal .content blockquote,
-html.navy .content blockquote,
-html.ayu  .content blockquote {
+html.navy .content blockquote {
     background: rgba(233, 78, 36, 0.1);
 }
 
@@ -493,9 +482,7 @@ html.ayu  .content blockquote {
 }
 
 /* 18% opacity is invisible on dark backgrounds — raise to 45% */
-html.coal .content h2,
-html.navy .content h2,
-html.ayu  .content h2 {
+html.navy .content h2 {
     border-bottom-color: rgba(241, 70, 17, 0.45);
 }
 
@@ -524,9 +511,7 @@ html.ayu  .content h2 {
 
 /* Heading anchors must explicitly restore `inherit` in dark themes to prevent
    the dark-theme a:link rule (higher specificity) from turning them orange. */
-html.coal .content a.header,
-html.navy .content a.header,
-html.ayu  .content a.header {
+html.navy .content a.header {
     color: inherit;
 }
 
@@ -741,9 +726,7 @@ html.ayu  .content a.header {
     color: var(--cosmian-accent-dark);
 }
 
-html.coal #search-wrapper #searchresults li a mark,
-html.navy #search-wrapper #searchresults li a mark,
-html.ayu  #search-wrapper #searchresults li a mark {
+html.navy #search-wrapper #searchresults li a mark {
     color: var(--cosmian-accent);
 }
 
@@ -764,9 +747,7 @@ html.ayu  #search-wrapper #searchresults li a mark {
     color: var(--cosmian-accent-dark);
 }
 
-html.coal #search-wrapper #searchresults span.teaser em,
-html.navy #search-wrapper #searchresults span.teaser em,
-html.ayu  #search-wrapper #searchresults span.teaser em {
+html.navy #search-wrapper #searchresults span.teaser em {
     color: var(--cosmian-accent);
 }
 
@@ -972,6 +953,57 @@ html.ayu  .page-toc__nav a[aria-current="location"] {
 /* ── Print ───────────────────────────────────────────────────────────────── */
 
 @media print {
+    /* Copy of mdBook's print.css, which is only loaded when [output.html.print] is enabled. */
+    #sidebar,
+    #menu-bar,
+    .nav-chapters,
+    .mobile-nav-chapters {
+        display: none;
+    }
+
+    #page-wrapper.page-wrapper {
+        transform: none !important;
+        margin-inline-start: 0px;
+        overflow-y: initial;
+    }
+
+    #content {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .page {
+        overflow-y: initial;
+    }
+
+    code {
+        direction: ltr !important;
+    }
+
+    pre > .buttons {
+        z-index: 2;
+    }
+
+    a, a:visited, a:active, a:hover {
+        color: #4183c4;
+        text-decoration: none;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        page-break-inside: avoid;
+        page-break-after: avoid;
+    }
+
+    pre, code {
+        page-break-inside: avoid;
+        white-space: pre-wrap;
+    }
+
+    .fa {
+        display: none !important;
+    }
+
     .content table thead tr {
         background-color: #e0e0e0 !important;
         color: #000 !important;
@@ -1005,7 +1037,8 @@ html.ayu  .page-toc__nav a[aria-current="location"] {
 .kms-demo-banner__bg {
     position: absolute;
     inset: 0;
-    background: url('https://eviden.com/wp-content/uploads/2025/10/Eviden_Trustway_Cosmian_Dataprotection-banner.jpg') center/cover no-repeat;
+    /* In fonts/: the only theme folder mdBook copies to the output */
+    background: url('../../fonts/dataprotection-banner.jpg') center/cover no-repeat;
     z-index: 0;
 }
 .kms-demo-banner__bg::after {
@@ -1069,15 +1102,11 @@ html.ayu  .page-toc__nav a[aria-current="location"] {
     transform: translateX(3px);
 }
 
-/* Dark themes (navy/coal/ayu): lighten overlay so banner doesn't blend in */
-html.coal .kms-demo-banner__bg::after,
-html.navy .kms-demo-banner__bg::after,
-html.ayu  .kms-demo-banner__bg::after {
+/* Dark theme: lighten overlay so banner doesn't blend in */
+html.navy .kms-demo-banner__bg::after {
     background: linear-gradient(135deg, rgba(26,26,26,.6) 0%, rgba(26,26,26,.35) 100%);
 }
-html.coal .kms-demo-banner,
-html.navy .kms-demo-banner,
-html.ayu  .kms-demo-banner {
+html.navy .kms-demo-banner {
     box-shadow: 0 0 0 1px rgba(255,255,255,.08);
 }
 

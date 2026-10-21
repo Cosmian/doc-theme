@@ -4,24 +4,20 @@
 (function () {
     'use strict';
 
-    var DARK_THEMES  = ['coal', 'navy', 'ayu'];
-    var DARK_TARGET  = 'navy';   // preferred dark theme
-    var LIGHT_TARGET = 'light';  // preferred light theme
-    // Keep legacy themes in the removal list so old localStorage values are
-    // properly cleared when switching themes (coal/ayu/rust removed from UI).
-    var ALL_THEMES   = ['coal', 'navy', 'ayu', 'rust', 'light'];
+    var DARK_THEME   = 'navy';
+    var LIGHT_THEME  = 'light';
 
     function currentTheme() {
-        return localStorage.getItem('mdbook-theme') || LIGHT_TARGET;
+        return localStorage.getItem('mdbook-theme') || LIGHT_THEME;
     }
 
     function isDark(theme) {
-        return DARK_THEMES.indexOf(theme) !== -1;
+        return theme === DARK_THEME;
     }
 
     function applyTheme(theme) {
         var html = document.documentElement;
-        ALL_THEMES.forEach(function (t) { html.classList.remove(t); });
+        html.classList.remove(DARK_THEME, LIGHT_THEME);
         html.classList.add(theme);
         localStorage.setItem('mdbook-theme', theme);
     }
@@ -42,7 +38,7 @@
         syncIcon(btn);
 
         btn.addEventListener('click', function () {
-            var next = isDark(currentTheme()) ? LIGHT_TARGET : DARK_TARGET;
+            var next = isDark(currentTheme()) ? LIGHT_THEME : DARK_THEME;
             applyTheme(next);
             syncIcon(btn);
             // Mermaid diagrams are rendered once at page load; a reload is the
